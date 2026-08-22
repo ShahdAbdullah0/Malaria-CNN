@@ -7,40 +7,40 @@ This project implements a **Convolutional Neural Network (CNN)** for classifying
 * **Parasitized**
 * **Uninfected**
 
-The project covers the complete deep learning workflow, including image preprocessing, data augmentation, model building, training, and evaluation.
+The project covers a complete deep learning workflow, including data exploration, image preprocessing, data augmentation, CNN model development, training, and evaluation.
 
 ## 🎯 Objective
 
-The main objective is to develop a CNN-based image classification model capable of distinguishing between malaria-infected and uninfected blood cell images.
+The main objective of this project is to develop a deep learning model capable of distinguishing between malaria-infected and uninfected blood cell images.
 
 ## 📊 Dataset
 
-The dataset contains **27,560 images** distributed equally between the two classes:
+The dataset contains **27,560 microscopic cell images**, distributed equally between the two classes:
 
 | Class       | Number of Images |
 | ----------- | ---------------: |
 | Parasitized |           13,780 |
 | Uninfected  |           13,780 |
 
-For model training and validation, an **80/20 validation split** was used:
+An **80/20 validation split** was used for model training:
 
 * **Training:** 22,048 images
 * **Validation:** 5,510 images
 
 ## 🔧 Image Preprocessing
 
-The images were processed before being used by the model.
+The images were prepared before being passed to the CNN model.
 
 ### Preprocessing steps
 
-* Converted images to **RGB**
-* Resized images to **128 × 128**
-* Converted images into NumPy arrays
-* Normalized pixel values to the range **0–1**
+* Images were converted to **RGB**
+* Images were resized to **128 × 128 pixels**
+* Pixel values were normalized to the range **0–1**
+* Images were prepared using `ImageDataGenerator`
 
 ### Data Augmentation
 
-`ImageDataGenerator` was used to improve model generalization through:
+Data augmentation was applied to improve model generalization using:
 
 * Rotation
 * Width shifting
@@ -48,24 +48,29 @@ The images were processed before being used by the model.
 * Zooming
 * Horizontal flipping
 
-The images were also rescaled using `1./255`.
-
 ## 🧠 CNN Architecture
 
-The model was built using **TensorFlow/Keras**.
+The model was implemented using **TensorFlow/Keras**.
 
-The architecture consists of three convolutional blocks:
+The architecture contains three convolutional blocks with increasing numbers of filters:
 
-* `Conv2D(32)` + Batch Normalization + Max Pooling + Dropout
-* `Conv2D(64)` + Batch Normalization + Max Pooling + Dropout
-* `Conv2D(128)` + Batch Normalization + Max Pooling + Dropout
+* **32 filters**
+* **64 filters**
+* **128 filters**
 
-This is followed by:
+The convolutional layers are combined with:
+
+* Batch Normalization
+* Max Pooling
+* Dropout
+
+The convolutional feature extractor is followed by:
 
 * Flatten layer
 * Dense layer with **128 neurons**
 * Dropout
-* Final Dense layer with **1 neuron and sigmoid activation**
+* Final Dense layer with **1 neuron**
+* Sigmoid activation for binary classification
 
 The model contains approximately **3.3 million trainable parameters**.
 
@@ -77,30 +82,41 @@ The model was compiled using:
 * **Loss Function:** Binary Crossentropy
 * **Metric:** Accuracy
 
-Two callbacks were used during training:
+Two callbacks were used:
 
-* **EarlyStopping** to stop training when validation loss stopped improving
-* **ReduceLROnPlateau** to reduce the learning rate when validation performance plateaued
+* **EarlyStopping** with `patience=3` and `restore_best_weights=True`
+* **ReduceLROnPlateau** for adaptive learning-rate reduction
 
-Although the maximum number of epochs was set to 50, training stopped after **8 epochs** due to the training callbacks.
+The maximum number of epochs was set to **50**. The EarlyStopping callback automatically stopped training when validation loss stopped improving.
+
+In the latest training run, the model reached **Epoch 16/50** before training stopped.
 
 ## 📈 Results
 
-The final recorded training results were:
+During training, the best recorded validation accuracy was:
 
-* **Training Accuracy:** 94.67%
-* **Validation Accuracy:** 94.08%
-* **Validation Loss:** 0.1722
+**94.23% at Epoch 12**
 
-The classification report on the **5,510 validation images** showed:
+At Epoch 12:
 
-| Class                | Precision | Recall | F1-Score |
-| -------------------- | --------: | -----: | -------: |
-| Parasitized          |      0.96 |   0.92 |     0.94 |
-| Uninfected           |      0.92 |   0.96 |     0.94 |
-| **Overall Accuracy** |           |        | **0.94** |
+* Training Accuracy: **95.09%**
+* Validation Accuracy: **94.23%**
+* Validation Loss: **0.1797**
 
-These results show that the model achieved approximately **94% validation accuracy** while maintaining balanced performance between the two classes.
+The final evaluation on the validation set produced:
+
+* **Validation Loss:** 0.1746
+* **Validation Accuracy:** **93.94%**
+
+### Classification Report
+
+| Class                | Precision | Recall | F1-Score |   Support |
+| -------------------- | --------: | -----: | -------: | --------: |
+| Parasitized          |      0.96 |   0.93 |     0.94 |     2,755 |
+| Uninfected           |      0.93 |   0.96 |     0.94 |     2,755 |
+| **Overall Accuracy** |           |        | **0.94** | **5,510** |
+
+The classification report shows balanced performance between the two classes, with an overall accuracy of approximately **94%** on the validation set.
 
 ## 🛠️ Technologies Used
 
@@ -110,6 +126,7 @@ These results show that the model achieved approximately **94% validation accura
 * **Pandas**
 * **Matplotlib**
 * **Pillow**
+* **Scikit-learn**
 * **Google Colab**
 * **Convolutional Neural Networks (CNN)**
 
@@ -127,42 +144,54 @@ Malaria-CNN/
 
 The project was developed using **Google Colab**.
 
-To run the notebook:
+To run the project:
 
 1. Open `Malaria_CNN.ipynb`.
 2. Prepare the malaria cell image dataset.
-3. Make sure the dataset follows the required folder structure.
-4. Install/import the required libraries.
+3. Make sure the dataset contains the required class folders.
+4. Install or import the required libraries.
 5. Run the notebook cells sequentially.
 
 Expected dataset structure:
 
 ```text
 cell_images/
-└── Parasitized/
+├── Parasitized/
 └── Uninfected/
 ```
 
 ## 💡 Key Learning Outcomes
 
-Through this project, I practiced:
+Through this project, we practiced:
 
 * Working with image datasets
 * Image preprocessing and normalization
 * Data augmentation
 * Building CNN architectures
-* Using Batch Normalization and Dropout
-* Training deep learning models with TensorFlow/Keras
-* Applying Early Stopping and learning-rate scheduling
-* Evaluating classification models using precision, recall, F1-score, and accuracy
+* Batch Normalization and Dropout
+* Training deep learning models using TensorFlow/Keras
+* Using EarlyStopping and learning-rate scheduling
+* Evaluating classification models
+* Using precision, recall, F1-score, and accuracy for model evaluation
 
-## 👩‍💻 Author
+## 👥 Team
 
-* **Shahd Abdullah**
-* **Samaa Mohamed**
-* **Shahd Reda**
+This project was developed collaboratively by:
 
-Computer Science and Artificial Intelligence Student
-Benha University
+* **Shahd Abdullah Mohamed Reda**
+* **Samaa Mohamed Ali**
+* **Shahd Reda El-Gohary**
 
-GitHub: [ShahdAbdullah0](https://github.com/ShahdAbdullah0)
+## 👩‍💻 Authors
+
+* **Shahd Abdullah Mohamed Reda**
+* **Samaa Mohamed Ali**
+* **Shahd Reda El-Gohary**
+
+
+Computer Science and Artificial Intelligence Student — Benha University
+---
+
+### 📌 Project Repository
+
+The complete implementation is available in this repository, including the Jupyter Notebook and project documentation.
