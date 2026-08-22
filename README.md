@@ -97,9 +97,9 @@ Through this project, I practiced:
 
 ## 👩‍💻 Author
 
-**Shahd Abdullah**
-**Samaa Mohamed**
-**Shahd Reda**
+* **Shahd Abdullah**
+* **Samaa Mohamed**
+* **Shahd Reda**
 
 Computer Science & Artificial Intelligence Student
 Benha University
